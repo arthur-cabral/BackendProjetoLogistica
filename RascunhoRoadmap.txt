@@ -1,0 +1,13 @@
+Roadmap
+
+Empresa envia produto, nisso, será possível filtrar por empresa, todos os produtos criados. Produto se inicia com status enviado.
+status disponíveis: enviado, chegou na sede, sede enviou, chegou ao destinatário, destinatário ausente, produto perdido/roubado, 
+
+Status atualiza conforme passam-se as etapas.
+
+
+Front:
+
+- Lista venda
+- Lista empresas
+- Lista usuário (administração)

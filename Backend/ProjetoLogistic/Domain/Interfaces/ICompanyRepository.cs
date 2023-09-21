@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Domain.Interfaces
 {
     public interface ICompanyRepository : IRepository<Company>
     {
-        Task<IEnumerable<Company>> GetCompanies();
+        Task<PagedList<Company>> GetCompanies(PaginationParameters paginationParameters);
         Task<Company> GetCompanyById(long id);
         Task<bool> ExistsCompany(long id);
         Task CreateCompany(Company company);

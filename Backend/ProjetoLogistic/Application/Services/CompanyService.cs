@@ -1,9 +1,11 @@
 ﻿using Application.DTO.Company;
+using Application.DTO.Pagination;
 using Application.DTO.Response;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +25,11 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<CompanyDTO>> GetCompanies()
+        public async Task<PagedList<CompanyDTO>> GetCompanies(PaginationParametersDTO paginationParametersDTO)
         {
-            var companyEntity = await _companyRepository.GetCompanies();
-            return _mapper.Map<IEnumerable<CompanyDTO>>(companyEntity);
+            var paginationParametersEntity = _mapper.Map<PaginationParameters>(paginationParametersDTO);
+            var companyEntity = await _companyRepository.GetCompanies(paginationParametersEntity);
+            return _mapper.Map<PagedList<CompanyDTO>>(companyEntity);
         }
 
         public async Task<CompanyDTO> GetCompanyById(long id)

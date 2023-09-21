@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Pagination;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,9 +17,10 @@ namespace Infrastructure.Repositories
         {
         }
         
-        public async Task<IEnumerable<Company>> GetCompanies()
+        public async Task<PagedList<Company>> GetCompanies(PaginationParameters paginationParameters)
         {
-            return await Get().ToListAsync();
+            return PagedList<Company>.ToPagedList(Get().OrderBy(on => on.Name), 
+                paginationParameters.PageNumber, paginationParameters.PageSize);
         }
 
         public async Task<Company> GetCompanyById(long id)

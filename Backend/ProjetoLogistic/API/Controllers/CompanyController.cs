@@ -1,8 +1,11 @@
 ﻿using Application.DTO.Company;
+using Application.DTO.Pagination;
 using Application.DTO.Response;
 using Application.Interfaces;
+using Domain.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -18,9 +21,23 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CompanyDTO>>> GetCompanies()
+        public async Task<ActionResult<PagedList<CompanyDTO>>> GetCompanies(
+            [FromQuery] PaginationParametersDTO paginationParameters)
         {
-            var companies = await _companyService.GetCompanies();
+            var companies = await _companyService.GetCompanies(paginationParameters);
+
+            var metadata = new
+            {
+                companies.TotalCount,
+                companies.PageSize,
+                companies.CurrentPage,
+                companies.TotalPages,
+                companies.HasNext,
+                companies.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
             return Ok(companies);
         }
 

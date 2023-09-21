@@ -24,8 +24,10 @@ namespace CrossCutting.IoC
                 new MySqlServerVersion(new Version(1, 1)), b => b.MigrationsAssembly("API")));
 
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<ISaleService, SaleService>();
             
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<ISaleRepository, SaleRepository>();
 
             services.AddAutoMapper(typeof(DomainToDTOMappingProfile));
 

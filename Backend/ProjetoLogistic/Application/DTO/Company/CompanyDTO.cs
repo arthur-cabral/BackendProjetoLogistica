@@ -12,6 +12,7 @@ namespace Application.DTO.Company
         public long Id { get; set; }
         public string Name { get; set; }
         public string Cnpj { get; set; }
+        public bool Active { get; set; }
         public ICollection<SaleDTO> Sales { get; set; }
     }
 }

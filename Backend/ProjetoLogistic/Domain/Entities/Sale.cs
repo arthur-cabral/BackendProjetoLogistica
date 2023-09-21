@@ -11,6 +11,7 @@ namespace Domain.Entities
         public long Id { get; set; }
         public string Description { get; set; }
         public double Value { get; set; }
+        public bool Active { get; set; }
         public DateTime DateCreated { get; set; }
         public Company Company { get; set; }
     }

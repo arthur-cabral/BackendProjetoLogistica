@@ -16,6 +16,7 @@ namespace Infrastructure.Context
         { }
 
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Sale> Sales { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

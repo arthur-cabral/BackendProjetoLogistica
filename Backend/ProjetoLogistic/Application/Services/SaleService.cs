@@ -1,10 +1,12 @@
 ﻿using Application.DTO.Company;
+using Application.DTO.Pagination;
 using Application.DTO.Response;
 using Application.DTO.Sale;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,18 +18,25 @@ namespace Application.Services
     public class SaleService : ISaleService
     {
         private readonly ISaleRepository _saleRepository;
+        private readonly ICompanyRepository _companyRepository;
         private readonly IMapper _mapper;
 
-        public SaleService(ISaleRepository saleRepository, IMapper mapper)
+        public SaleService(ISaleRepository saleRepository, ICompanyRepository companyRepository, IMapper mapper)
         {
             _saleRepository = saleRepository;
+            _companyRepository = companyRepository;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<SaleDTO>> GetSales()
+        public async Task<PagedList<SaleDTO>> GetSales(PaginationParametersDTO paginationParametersDTO)
         {
-            var saleEntity = await _saleRepository.GetSales();
-            return _mapper.Map<IEnumerable<SaleDTO>>(saleEntity);
+            var paginationParametersEntity = _mapper.Map<PaginationParameters>(paginationParametersDTO);
+            var saleEntity = await _saleRepository.GetSales(paginationParametersEntity);
+            foreach (var sale in saleEntity)
+            {
+                sale.Company = await _companyRepository.GetCompanyById(sale.CompanyId);
+            }
+            return _mapper.Map<PagedList<SaleDTO>>(saleEntity);
         }
 
         public async Task<SaleDTO> GetSaleById(long id)
@@ -37,14 +46,41 @@ namespace Application.Services
             {
                 throw new Exception("Sale not found!");
             }
+
+            var companyEntity = await _companyRepository.GetCompanyById(saleEntity.CompanyId);
+            saleEntity.Company = companyEntity;
             return _mapper.Map<SaleDTO>(saleEntity);
+        }
+
+        public async Task<PagedList<SaleDTO>> GetSaleByCompanyId(PaginationParametersDTO paginationParametersDTO, long id)
+        {
+            var existsCompany = await _companyRepository.ExistsCompany(id);
+            if (!existsCompany)
+            {
+                throw new Exception("Company not found");
+            }
+
+            var paginationParametersEntity = _mapper.Map<PaginationParameters>(paginationParametersDTO);
+            var saleEntity = await _saleRepository.GetSaleByCompanyId(paginationParametersEntity, id);
+            foreach (var sale in saleEntity)
+            {
+                sale.Company = await _companyRepository.GetCompanyById(sale.CompanyId);
+            }
+            return _mapper.Map<PagedList<SaleDTO>>(saleEntity);
         }
 
         public async Task<MessageResponseDTO> CreateSale(SaleDTO saleDTO)
         {
             try
             {
-                var saleEntity = _mapper.Map<Sale>(saleDTO);
+                saleDTO.Active = true;
+                Company companyEntity = await _companyRepository.GetCompanyById(saleDTO.CompanyId);
+                if (companyEntity == null || !companyEntity.Active)
+                {
+                    return new MessageResponseDTO(false, "Company not found or not active");
+                }
+
+                Sale saleEntity = _mapper.Map<Sale>(saleDTO);
                 await _saleRepository.CreateSale(saleEntity);
 
                 return new MessageResponseDTO(true, "Sale created successfully");

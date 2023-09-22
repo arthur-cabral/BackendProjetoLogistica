@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,9 @@ namespace Domain.Interfaces
 {
     public interface ISaleRepository : IRepository<Sale>
     {
-        Task<IEnumerable<Sale>> GetSales();
+        Task<PagedList<Sale>> GetSales(PaginationParameters paginationParameters);
         Task<Sale> GetSaleById(long id);
+        Task<PagedList<Sale>> GetSaleByCompanyId(PaginationParameters paginationParameters, long id);
         Task<bool> ExistsSale(long id);
         Task CreateSale(Sale sale);
         Task UpdateSale(Sale sale);

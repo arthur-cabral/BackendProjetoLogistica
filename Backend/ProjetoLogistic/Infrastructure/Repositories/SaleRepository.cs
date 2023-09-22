@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Pagination;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,14 +17,21 @@ namespace Infrastructure.Repositories
         {
         }
 
-        public async Task<IEnumerable<Sale>> GetSales()
+        public async Task<PagedList<Sale>> GetSales(PaginationParameters paginationParameters)
         {
-            return await Get().ToListAsync();
+            return PagedList<Sale>.ToPagedList(Get().OrderBy(on => on.Id),
+                paginationParameters.PageNumber, paginationParameters.PageSize);
         }
 
         public async Task<Sale> GetSaleById(long id)
         {
             return await GetByProperty((x) => x.Id == id);
+        }
+
+        public async Task<PagedList<Sale>> GetSaleByCompanyId(PaginationParameters paginationParameters, long id)
+        {
+            return PagedList<Sale>.ToPagedList(Get().Where((x) => x.Company.Id == id),
+                paginationParameters.PageNumber, paginationParameters.PageSize);
         }
 
         public async Task<bool> ExistsSale(long id)

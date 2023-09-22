@@ -23,6 +23,7 @@ namespace CrossCutting.IoC
             services.AddDbContext<AppDbContext>(options => options.UseMySql(configuration.GetConnectionString("DefaultConnection"),
                 new MySqlServerVersion(new Version(1, 1)), b => b.MigrationsAssembly("API")));
 
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<ISaleService, SaleService>();
             

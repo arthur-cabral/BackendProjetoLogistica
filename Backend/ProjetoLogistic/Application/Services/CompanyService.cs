@@ -46,6 +46,7 @@ namespace Application.Services
         {
             try
             {
+                companyDTO.Active = true;
                 var companyEntity = _mapper.Map<Company>(companyDTO);
                 await _companyRepository.CreateCompany(companyEntity);
 

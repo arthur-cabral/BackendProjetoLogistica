@@ -13,6 +13,6 @@ namespace Application.DTO.Company
         public string Name { get; set; }
         public string Cnpj { get; set; }
         public bool Active { get; set; }
-        public ICollection<SaleDTO> Sales { get; set; }
+        public ICollection<SaleDTO> Sales { get; set; } = new List<SaleDTO>();
     }
 }

@@ -14,6 +14,7 @@ namespace Application.DTO.Sale
         public double Value { get; set; }
         public bool Active { get; set; }
         public DateTime DateCreated { get; set; }
-        public CompanyDTO Company { get; set; }
+        public long CompanyId { get; set; }
+        public CompanyDTO? Company { get; set; }
     }
 }

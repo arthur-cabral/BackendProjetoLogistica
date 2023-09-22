@@ -37,6 +37,17 @@ builder.Services.AddAuthentication(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyRequest",
+        builder =>
+        {
+            builder.AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,7 +61,11 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.UseCors();
 
 app.MapControllers();
 

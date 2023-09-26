@@ -21,7 +21,6 @@ services:
     networks:
       - logistic-bridge
   backendLogistic:
-    # image: arthurcabral/backend-logistic:latest
     image: arthurcabral/backend-logistic:latest
     build: ./Backend/ProjetoLogistic
     restart: always
@@ -32,8 +31,6 @@ services:
       - DBHOST=db
       - ASPNETCORE_URLS=https://+;http://+
       - ASPNETCORE_HTTPS_PORT=8001
-      # - ASPNETCORE_Kestrel__Certificates__Default__Password=#Admin123
-      # - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/API.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${DOCKER_CERTIFICATE_PASSWORD}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=${DOCKER_CERTIFICATE_PATH}
     depends_on:

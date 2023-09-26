@@ -48,6 +48,21 @@ builder.Services.AddCors(options =>
         });
 });
 
+if (!builder.Environment.IsDevelopment())
+{
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(5000);
+        options.ListenAnyIP(8001, listenOptions =>
+        {
+            listenOptions.UseHttps(
+                builder.Configuration["Kestrel:Endpoints:Https:Certificate:Path"],
+                builder.Configuration["Kestrel:Endpoints:Https:Certificate:Password"]
+            );
+        });
+    });
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -20,8 +20,16 @@ namespace CrossCutting.IoC
         public static IServiceCollection AddInfrastructure(this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddDbContext<AppDbContext>(options => options.UseMySql(configuration.GetConnectionString("DefaultConnection"),
-                new MySqlServerVersion(new Version(1, 1)), b => b.MigrationsAssembly("API")));
+            var defaultConnection = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseMySql(
+                    defaultConnection,
+                    new MySqlServerVersion(new Version(8, 0, 33)),
+                    b => b.MigrationsAssembly("API")
+                );
+
+            });
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICompanyService, CompanyService>();

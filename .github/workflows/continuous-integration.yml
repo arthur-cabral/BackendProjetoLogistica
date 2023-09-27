@@ -28,9 +28,11 @@ jobs:
         dotnet-version: 6.0.x
         
     - name: Restore dependencies
+      working-directory: ./Backend/ProjetoLogistic
       run: dotnet restore
       
     - name: Build
+      working-directory: ./Backend/ProjetoLogistic
       run: dotnet build --no-restore
       
     - name: Docker Compose Build

@@ -14,7 +14,7 @@ Para realizar a inicialização do projeto, é necessário seguir alguns passos.
 
 1. Clone o repositório
    ```sh
-   git clone [https://github.com/your_username_/Project-Name.git](https://github.com/arthur-cabral/BackendProjetoLogistica)
+   git clone [https://github.com/arthur-cabral/BackendProjetoLogistica.git](https://github.com/arthur-cabral/BackendProjetoLogistica)
    ```
 2. Instalar dependencias
    ```sh

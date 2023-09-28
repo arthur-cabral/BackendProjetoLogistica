@@ -1,4 +1,5 @@
-﻿using Application.DTO.Pagination;
+﻿using Application.DTO.Company;
+using Application.DTO.Pagination;
 using Application.DTO.Response;
 using Application.DTO.Sale;
 using Application.Interfaces;
@@ -29,19 +30,7 @@ namespace API.Controllers
             [FromQuery] PaginationParametersDTO paginationParameters)
         {
             var sales = await _saleService.GetSales(paginationParameters);
-
-            var metadata = new
-            {
-                sales.TotalCount,
-                sales.PageSize,
-                sales.CurrentPage,
-                sales.TotalPages,
-                sales.HasNext,
-                sales.HasPrevious
-            };
-
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
+            AddingXPaginationHeaders(sales);
             return Ok(sales);
         }
 
@@ -66,24 +55,27 @@ namespace API.Controllers
             try
             {
                 var sales = await _saleService.GetSaleByCompanyId(paginationParameters, id);
-                
-                var metadata = new
-                {
-                    sales.TotalCount,
-                    sales.PageSize,
-                    sales.CurrentPage,
-                    sales.TotalPages,
-                    sales.HasNext,
-                    sales.HasPrevious
-                };
-
-                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
+                AddingXPaginationHeaders(sales);
                 return Ok(sales);
             } catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
+        }
+
+        private void AddingXPaginationHeaders(PagedList<SaleDTO> sales)
+        {
+            var metadata = new
+            {
+                sales.TotalCount,
+                sales.PageSize,
+                sales.CurrentPage,
+                sales.TotalPages,
+                sales.HasNext,
+                sales.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
         }
 
         [HttpPost]

@@ -97,5 +97,28 @@ namespace API.Controllers
             }
             return BadRequest(company.Message);
         }
+
+        [HttpPut]
+        public async Task<ActionResult<MessageResponseDTO>> UpdateSale(
+            [FromBody] SaleDTO request)
+        {
+            var sale = await _saleService.UpdateSale(request);
+            if (sale.Success)
+            {
+                return Ok(sale.Message);
+            }
+            return BadRequest(sale.Message);
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult<MessageResponseDTO>> DeleteSale(long id)
+        {
+            var sale = await _saleService.DeleteSale(id);
+            if (sale.Success)
+            {
+                return NoContent();
+            }
+            return NotFound(sale.Message);
+        }
     }
 }

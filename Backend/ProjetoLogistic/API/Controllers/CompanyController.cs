@@ -27,7 +27,12 @@ namespace API.Controllers
             [FromQuery] PaginationParametersDTO paginationParameters)
         {
             var companies = await _companyService.GetCompanies(paginationParameters);
+            AddingXPaginationHeaders(companies);
+            return Ok(companies);
+        }
 
+        private void AddingXPaginationHeaders(PagedList<CompanyDTO> companies)
+        {
             var metadata = new
             {
                 companies.TotalCount,
@@ -39,8 +44,6 @@ namespace API.Controllers
             };
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-            return Ok(companies);
         }
 
         [HttpGet("{id}", Name = "GetCompanyById")]

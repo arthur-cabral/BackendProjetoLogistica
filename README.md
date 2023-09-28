@@ -6,11 +6,7 @@ Este projeto tem como objetivo criar uma plataforma para controle de produtos e 
 
 Para realizar a inicialização do projeto, é necessário seguir alguns passos.
 
-### Pré-requisitos
-
 ### Instalação
-
-### Installation
 
 1. Clone o repositório
    ```sh

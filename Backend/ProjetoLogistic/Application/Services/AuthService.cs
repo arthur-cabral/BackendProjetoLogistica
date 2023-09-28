@@ -44,6 +44,11 @@ namespace Application.Services
 
         public async Task<CreateToken> Register(UserDTO userDTO)
         {
+            if (!PasswordEqualsConfirmPassword(userDTO))
+            {
+                throw new Exception("Confirm password is not equals to password");
+            }
+
             IdentityUser createUser = new()
             {
                 UserName = userDTO.Email,
@@ -62,7 +67,15 @@ namespace Application.Services
             {
                 throw new Exception(result.Errors.ToString());
             }
+        }
 
+        private static bool PasswordEqualsConfirmPassword(UserDTO userDTO)
+        {
+            if (!userDTO.Password.Equals(userDTO.ConfirmPassword))
+            {
+                return false;
+            }
+            return true;
         }
 
         private CreateToken GenerateToken(UserDTO userDTO)

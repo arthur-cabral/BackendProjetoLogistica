@@ -1,5 +1,7 @@
-﻿using Application.Interfaces;
+﻿using Application.HttpClientServices;
+using Application.Interfaces;
 using Application.Mapping;
+using Application.RabbitMq;
 using Application.Services;
 using Domain.Interfaces;
 using Infrastructure.Context;
@@ -37,6 +39,9 @@ namespace CrossCutting.IoC
             
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<ISaleRepository, SaleRepository>();
+
+            services.AddSingleton<IRabbitMqClient, RabbitMqClient>();
+            services.AddHttpClient<IHttpClientTransportService, HttpClientTransportService>();
 
             services.AddAutoMapper(typeof(DomainToDTOMappingProfile));
 

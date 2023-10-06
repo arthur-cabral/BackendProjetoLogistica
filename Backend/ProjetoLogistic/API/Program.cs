@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -15,7 +16,10 @@ builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{ 
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProjetoLogistic", Description = "Swagger Logistic", Version = "v1" });
+});
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -63,7 +67,6 @@ if (!builder.Environment.IsDevelopment())
         });
     });
 }
-
 var app = builder.Build();
 
 app.UseSwagger();

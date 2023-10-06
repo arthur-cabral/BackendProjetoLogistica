@@ -2,7 +2,9 @@
 using Application.DTO.Pagination;
 using Application.DTO.Response;
 using Application.DTO.Sale;
+using Application.HttpClientServices;
 using Application.Interfaces;
+using Application.RabbitMq;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -20,12 +22,20 @@ namespace Application.Services
         private readonly ISaleRepository _saleRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly IMapper _mapper;
+        private readonly IRabbitMqClient _rabbitMqClient;
+        private readonly IHttpClientTransportService _httpClientTransport;
 
-        public SaleService(ISaleRepository saleRepository, ICompanyRepository companyRepository, IMapper mapper)
+        public SaleService(ISaleRepository saleRepository, 
+            ICompanyRepository companyRepository, 
+            IMapper mapper,
+            IRabbitMqClient rabbitMqClient,
+            IHttpClientTransportService httpClientTransport)
         {
             _saleRepository = saleRepository;
             _companyRepository = companyRepository;
             _mapper = mapper;
+            _rabbitMqClient = rabbitMqClient;
+            _httpClientTransport = httpClientTransport;
         }
 
         public async Task<PagedList<SaleDTO>> GetSales(PaginationParametersDTO paginationParametersDTO)
@@ -82,6 +92,8 @@ namespace Application.Services
 
                 Sale saleEntity = _mapper.Map<Sale>(saleDTO);
                 await _saleRepository.CreateSale(saleEntity);
+
+                _rabbitMqClient.CreateTransport(saleDTO);
 
                 return new MessageResponseDTO(true, "Sale created successfully");
             }
